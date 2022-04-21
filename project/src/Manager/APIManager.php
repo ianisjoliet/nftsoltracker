@@ -3,6 +3,7 @@ namespace App\Manager;
 
 use App\Entity\CollectionTrack;
 use App\Repository\CollectionTrackRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -16,11 +17,14 @@ class APIManager
 {
     private $client;
     private $collectionTrackRepository;
-
-    public function __construct(HttpClientInterface $client, CollectionTrackRepository $collectionTrackRepository)
+    private $em;
+    public function __construct(HttpClientInterface $client,
+                                CollectionTrackRepository $collectionTrackRepository,
+                                EntityManagerInterface $em)
     {
         $this->client = $client;
         $this->collectionTrackRepository = $collectionTrackRepository;
+        $this->em = $em;
     }
 
     /**
@@ -30,17 +34,21 @@ class APIManager
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function checkFloor() {
+    public function checkFloor(int $all = 1) {
         $collections = $this->collectionTrackRepository->getAllCollection();
 
         $floorPrice = 0;
         foreach ($collections as $collection) {
             $collectionData = $this->callAPI($collection->getName());
-            $floorPrice = $collectionData['floorPrice'];
+            $floorPrice = $collectionData['floorPrice'] / 1000000000;
             if ($floorPrice <= $collection->getValue()) {
-                dump("floor price low(".$collectionData['floorPrice'].") for collection:".$collectionData['symbol']);
-            } else {
-                dump("floor price(".$collectionData['floorPrice'].") ok for collection:".$collectionData['symbol']);
+                dump("/!\--- ".$collectionData['symbol']." ...!");
+                dump("FLOOR PRICE:".$floorPrice);
+                dump("VALUE:".$collection->getValue());
+            } else if ($all === 1){
+                dump("--- ".$collectionData['symbol']." ...");
+                dump("FLOOR PRICE:".$floorPrice);
+                dump("VALUE:".$collection->getValue());
             }
         }
     }
@@ -74,17 +82,28 @@ class APIManager
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      */
-    public function addCollection(string $name, int $value): bool {
+    public function addCollection(string $name, float $value): bool {
         if (!$this->callAPI($name)) {
             return false;
         }
 
-        $collectionTrack = new CollectionTrack();
-        $collectionTrack->setName($name);
-        $collectionTrack->setValue($value);
+        $collection = $this->em->getRepository(CollectionTrack::class)->findOneBy(['name' => $name]);
+        if ($collection) {
+            $collection->setValue($value);
+            $this->em->persist($collection);
+            $this->em->flush();
+        } else {
+            $collectionTrack = new CollectionTrack();
+            $collectionTrack->setName($name);
+            $collectionTrack->setValue($value);
 
-        $this->collectionTrackRepository->add($collectionTrack);
+            $this->collectionTrackRepository->add($collectionTrack);
+        }
         return true;
+    }
+
+    public function removeCollection() {
+
     }
 
     /**
@@ -94,7 +113,7 @@ class APIManager
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function getCollectionsFloor(string $collection, int $value = null) {
+    public function getCollectionsFloor(string $collection, float $value = null) {
         $result = $this->callAPI($collection);
         dump($result);
     }

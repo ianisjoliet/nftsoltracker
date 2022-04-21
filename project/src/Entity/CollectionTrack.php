@@ -23,7 +23,7 @@ class CollectionTrack
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $value;
 
@@ -44,12 +44,12 @@ class CollectionTrack
         return $this;
     }
 
-    public function getValue(): ?int
+    public function getValue(): ?float
     {
         return $this->value;
     }
 
-    public function setValue(int $value): self
+    public function setValue(float $value): self
     {
         $this->value = $value;
 
