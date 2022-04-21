@@ -102,8 +102,12 @@ class APIManager
         return true;
     }
 
-    public function removeCollection() {
-
+    public function removeCollection(string $collection) {
+        $collection = $this->em->getRepository(CollectionTrack::class)->findOneBy(['name' => $collection]);
+        if (!$collection) {
+            dump('no collection found');
+        }
+        $this->collectionTrackRepository->remove($collection);
     }
 
     /**
