@@ -3,6 +3,13 @@ namespace App\Manager;
 
 use App\Entity\CollectionTrack;
 use App\Repository\CollectionTrackRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class APIManager
@@ -16,46 +23,77 @@ class APIManager
         $this->collectionTrackRepository = $collectionTrackRepository;
     }
 
-    public function checkFloor(string $collection) {
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function checkFloor() {
         $collections = $this->collectionTrackRepository->getAllCollection();
 
         $floorPrice = 0;
         foreach ($collections as $collection) {
-            $floorPrice = $this->callAPI($collection->getName());
+            $collectionData = $this->callAPI($collection->getName());
+            $floorPrice = $collectionData['floorPrice'];
             if ($floorPrice <= $collection->getValue()) {
-                dump("floor price low");
+                dump("floor price low(".$collectionData['floorPrice'].") for collection:".$collectionData['symbol']);
+            } else {
+                dump("floor price(".$collectionData['floorPrice'].") ok for collection:".$collectionData['symbol']);
             }
         }
     }
 
-    public function callAPI(string $collection) {
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function callAPI(string $collection): ?array {
         $response = $this->client->request(
             'GET',
             'https://api-mainnet.magiceden.dev/v2/collections/'.$collection.'/stats'
         );
-
-        $statusCode = $response->getStatusCode();
-        // $statusCode = 200
-        $contentType = $response->getHeaders()['content-type'][0];
-        // $contentType = 'application/json'
-        $content = $response->getContent();
-        // $content = '{"id":521583, "name":"symfony-docs", ...}'
         $content = $response->toArray();
-        // $content = ['id' => 521583, 'name' => 'symfony-docs', ...]
-
-        if (isset($content['floorPrice']))
-            return $content['floorPrice'];
-        return 0;
+        if ($response->getStatusCode() === 200 && isset($content['floorPrice']) ) {
+            return $content;
+        } else {
+            return null;
+        }
     }
 
-    public function addCollection(string $name, int $value) {
+    /**
+     * @throws ORMException
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws OptimisticLockException
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    public function addCollection(string $name, int $value): bool {
+        if (!$this->callAPI($name)) {
+            return false;
+        }
+
         $collectionTrack = new CollectionTrack();
         $collectionTrack->setName($name);
         $collectionTrack->setValue($value);
 
         $this->collectionTrackRepository->add($collectionTrack);
+        return true;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     public function getCollectionsFloor(string $collection, int $value = null) {
         $result = $this->callAPI($collection);
         dump($result);

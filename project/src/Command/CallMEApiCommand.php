@@ -26,8 +26,6 @@ class CallMEApiCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $collection = "project_tenjin";
-        $res = $this->apiManager->checkFloor($collection);
-        $output->writeln($res);
+        $this->apiManager->checkFloor();
     }
 }

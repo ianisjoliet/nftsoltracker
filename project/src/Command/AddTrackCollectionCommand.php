@@ -31,6 +31,8 @@ class AddTrackCollectionCommand extends Command
     {
         $collection = $input->getArgument('collection');
         $value = $input->getArgument('value');
-        $this->apiManager->addCollection($collection, $value);
+        if (!$this->apiManager->addCollection($collection, $value)) {
+            dump("unable to add collection:".$collection);
+        }
     }
 }
