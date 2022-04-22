@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CollectionTrack;
 use App\Manager\MEAPIManager;
 use App\Manager\CollectionTrackerManager;
 use App\Repository\CollectionTrackRepository;
@@ -23,7 +24,20 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class CollectionTrackerController
 {
     /**
-     * @Route(name="get", methods={"POST"})
+     * @Route("/collections", name="Get all collection", methods={"GET"})
+     */
+    public function getAllCollectionTracker(Request $request,
+                                            CollectionTrackerManager $collectionTrackerManager,
+                                            SerializerInterface $serializer): Response
+    {
+        $collectionList = $collectionTrackerManager->getCollection();
+        return new Response(
+            $serializer->serialize($collectionList, "json")
+        );
+    }
+    
+    /**
+     * @Route(name="Add collection", methods={"POST"})
      * @param Request $request
      * @param CollectionTrackRepository $collectionTrackRepository
      * @param SerializerInterface $serializer
@@ -51,6 +65,26 @@ class CollectionTrackerController
             throw new NotFoundHttpException();
         }
 
+        return new Response();
+    }
+
+    /**
+     * @Route("/{id}", name="Remove collection", methods={"DELETE"})
+     * @param CollectionTrack $collectionTrack
+     * @param SerializerInterface $serializer
+     * @param CollectionTrackerManager $collectionTrackerManager
+     * @return Response
+     */
+    public function removeCollectionTracker(CollectionTrack $collectionTrack,
+                                            SerializerInterface $serializer,
+                                            CollectionTrackerManager $collectionTrackerManager): Response
+    {
+
+        if (!$collectionTrackerManager->removeCollection($collectionTrack->getId())) {
+            return new Response(
+                $serializer->serialize("unable to remove collection:".$collectionTrack->getName(), "json")
+            );
+        }
         return new Response();
     }
 }

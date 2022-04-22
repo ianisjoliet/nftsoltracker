@@ -29,6 +29,14 @@ class CollectionTrackerManager
         $this->apiManager = $apiManager;
     }
 
+    public function getCollection(string $name = null){
+        if (!$name) {
+            return $this->collectionTrackRepository->findAll();
+        } else {
+            return $this->collectionTrackRepository->findOneBy(['name' => $name]);
+        }
+    }
+
     /**
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
@@ -43,7 +51,6 @@ class CollectionTrackerManager
             return false;
         }
         $floorLimit = $this->royaltiesManager->CalcFloorPrice("buy",$fees, $value);
-
         $collection = $this->em->getRepository(CollectionTrack::class)->findOneBy(['name' => $name]);
         if ($collection) {
             $collection->setValue($value);
@@ -54,18 +61,20 @@ class CollectionTrackerManager
             $collectionTrack = new CollectionTrack();
             $collectionTrack->setName($name);
             $collectionTrack->setValue($value);
-            $collection->setFloorLimit($floorLimit);
+            $collectionTrack->setFloorLimit($floorLimit);
 
             $this->collectionTrackRepository->add($collectionTrack);
         }
         return true;
     }
 
-    public function removeCollection(string $name) {
-        $collection = $this->em->getRepository(CollectionTrack::class)->findOneBy(['name' => $name]);
+    public function removeCollection(int $id): bool
+    {
+        $collection = $this->em->getRepository(CollectionTrack::class)->findOneBy(['id' => $id]);
         if (!$collection) {
-            dump('no collection found');
+            return false;
         }
         $this->collectionTrackRepository->remove($collection);
+        return true;
     }
 }
