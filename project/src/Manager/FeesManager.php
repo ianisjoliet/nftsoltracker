@@ -12,9 +12,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class FeesManager
 {
     private $collectionTrackRepository;
-    public function __construct(CollectionTrackRepository $collectionTrackRepository)
+    private $meApiManager;
+    public function __construct(CollectionTrackRepository $collectionTrackRepository, MEAPIManager $meApiManager)
     {
         $this->collectionTrackRepository = $collectionTrackRepository;
+        $this->meApiManager = $meApiManager;
     }
     public function CalcFloorPrice(string $buySell, float $rt, float $price): float
     {
@@ -28,11 +30,38 @@ class FeesManager
     }
 
     /**
+     * @return array
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function checkFloorPrice(): array
+    {
+        $collections = $this->collectionTrackRepository->findAll();
+        $floorResult = [];
+        $floor = [];
+        foreach ($collections as $collection) {
+            $collectionData = $this->meApiManager->getCollectionStat($collection->getName());
+            $floorPrice = ($collectionData['floorPrice'] / 1000000000);
+            $limit = $collection->getValue() + (10 * $collection->getValue() / 100);
+            if ($floorPrice <= $limit) {
+                $floor['name'] = $collection->getName();
+                $floor['limit'] = $collection->getValue();
+                $floor['floorPrice'] = $floorPrice;
+                $floorResult[] = $floor;
+            }
+        }
+        return $floorResult;
+    }
+
+    /**
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function checkFloor(int $all = 1) {
+    public function checkFloorOld(int $all = 1) {
         $collections = $this->collectionTrackRepository->getAllCollection();
         dump($collections);
         $floorPrice = 0;

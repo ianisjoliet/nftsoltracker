@@ -34,7 +34,7 @@ class CalculFloorPriceCommand extends Command
         $royalties = $input->getArgument('royalties');
         $nftPrice = $input->getArgument('price');
         $lastPrice = $this->feesManager->CalcFloorPrice($buySell, $royalties, $nftPrice);
-        dump($lastPrice);
+        $output->writeln($lastPrice);
         return 1;
     }
 

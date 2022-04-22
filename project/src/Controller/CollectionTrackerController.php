@@ -58,7 +58,7 @@ class CollectionTrackerController
     {
         $result = json_decode($request->getContent(), false);
 
-        if (!$result->name || !$result->value || !$result->fees) {
+        if (!$result->name || !$result->value || !$result->limit) {
             throw new BadRequestHttpException('name|value|fees arguments required');
         }
 
