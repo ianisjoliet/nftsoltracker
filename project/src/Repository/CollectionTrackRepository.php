@@ -9,10 +9,12 @@ use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * Class CollectionTrackRepository
  * @method CollectionTrack|null find($id, $lockMode = null, $lockVersion = null)
  * @method CollectionTrack|null findOneBy(array $criteria, array $orderBy = null)
  * @method CollectionTrack[]    findAll()
  * @method CollectionTrack[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @package App\Repository
  */
 class CollectionTrackRepository extends ServiceEntityRepository
 {
@@ -21,10 +23,6 @@ class CollectionTrackRepository extends ServiceEntityRepository
         parent::__construct($registry, CollectionTrack::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(CollectionTrack $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -33,10 +31,6 @@ class CollectionTrackRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(CollectionTrack $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);

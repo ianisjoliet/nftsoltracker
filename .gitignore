@@ -1,0 +1,7 @@
+.idea/
+project/.env.local
+project/.env.*.local
+project/public/bundles/
+project/var/
+project/vendor/
+project/composer.lock

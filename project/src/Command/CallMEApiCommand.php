@@ -2,7 +2,8 @@
 
 namespace App\Command;
 
-use App\Manager\APIManager;
+use App\Manager\MEAPIManager;
+use App\Manager\FeesManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,10 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CallMEApiCommand extends Command
 {
-    private $apiManager;
-    public function __construct(APIManager $apiManager)
+    private $feesManager;
+    public function __construct(FeesManager $feesManager)
     {
-        $this->apiManager = $apiManager;
+        $this->feesManager = $feesManager;
 
         parent::__construct();
     }
@@ -30,7 +31,7 @@ class CallMEApiCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $all = $input->getArgument('all');
-        $this->apiManager->checkFloor($all);
+        $this->feesManager->checkFloor($all);
 
         return 1;
     }

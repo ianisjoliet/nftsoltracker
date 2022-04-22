@@ -27,6 +27,11 @@ class CollectionTrack
      */
     private $value;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $floorLimit;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -54,5 +59,21 @@ class CollectionTrack
         $this->value = $value;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFloorLimit()
+    {
+        return $this->floorLimit;
+    }
+
+    /**
+     * @param mixed $floorLimit
+     */
+    public function setFloorLimit($floorLimit): void
+    {
+        $this->floorLimit = $floorLimit;
     }
 }

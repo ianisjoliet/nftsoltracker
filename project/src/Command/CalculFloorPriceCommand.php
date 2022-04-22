@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Manager\RoyaltiesManager;
+use App\Manager\FeesManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CalculFloorPriceCommand extends Command
 {
-    private $royaltiesManager;
+    private $feesManager;
 
-    public function __construct(RoyaltiesManager $royaltiesManager)
+    public function __construct(FeesManager $feesManager)
     {
-        $this->royaltiesManager= $royaltiesManager;
+        $this->feesManager= $feesManager;
         parent::__construct();
     }
 
@@ -33,7 +33,7 @@ class CalculFloorPriceCommand extends Command
         $buySell = $input->getArgument('BuySell');
         $royalties = $input->getArgument('royalties');
         $nftPrice = $input->getArgument('price');
-        $lastPrice = $this->royaltiesManager->CalcFloorPrice($buySell, $royalties, $nftPrice);
+        $lastPrice = $this->feesManager->CalcFloorPrice($buySell, $royalties, $nftPrice);
         dump($lastPrice);
         return 1;
     }

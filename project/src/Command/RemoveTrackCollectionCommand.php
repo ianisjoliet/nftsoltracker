@@ -2,7 +2,8 @@
 
 namespace App\Command;
 
-use App\Manager\APIManager;
+use App\Manager\MEAPIManager;
+use App\Manager\CollectionTrackerManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,11 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveTrackCollectionCommand extends Command
 {
-    private $apiManager;
+    private $collectionTrackerManager;
 
-    public function __construct(APIManager $apiManager)
+    public function __construct(CollectionTrackerManager $collectionTrackerManager)
     {
-        $this->apiManager = $apiManager;
+        $this->collectionTrackerManager = $collectionTrackerManager;
         parent::__construct();
     }
 
@@ -29,7 +30,7 @@ class RemoveTrackCollectionCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $collection = $input->getArgument('collection');
-        $this->apiManager->removeCollection($collection);
+        $this->collectionTrackerManager->removeCollection($collection);
         return 1;
     }
 }
