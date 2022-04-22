@@ -44,9 +44,15 @@ services:
     restart: always
     networks:
       - dev
-
-
-
+  front:
+    build: nginx
+    container_name: front_angular
+    ports:
+    - "9393:9393"
+    volumes:
+      - ./front/:/usr/src/app/
+    command: >
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 9393"
 
 networks:
   dev:
