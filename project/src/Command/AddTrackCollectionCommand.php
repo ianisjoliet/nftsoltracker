@@ -34,5 +34,7 @@ class AddTrackCollectionCommand extends Command
         if (!$this->apiManager->addCollection($collection, $value)) {
             dump("unable to add collection:".$collection);
         }
+
+        return 1;
     }
 }
