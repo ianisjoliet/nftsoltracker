@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CollectionTrack;
+use App\Manager\FeesManager;
 use App\Manager\MEAPIManager;
 use App\Manager\CollectionTrackerManager;
 use App\Repository\CollectionTrackRepository;
@@ -35,7 +36,7 @@ class CollectionTrackerController
             $serializer->serialize($collectionList, "json")
         );
     }
-    
+
     /**
      * @Route(name="Add collection", methods={"POST"})
      * @param Request $request
@@ -86,6 +87,27 @@ class CollectionTrackerController
             );
         }
         return new Response();
+    }
+
+    /**
+     * @Route("/floor_limit", name="Get all collection", methods={"POST"})
+     * @param Request $request
+     * @param FeesManager $feesManager
+     * @param SerializerInterface $serializer
+     * @return Response
+     */
+    public function calcFloorLimit(Request $request, FeesManager $feesManager,SerializerInterface $serializer): Response
+    {
+        $result = json_decode($request->getContent(), false);
+
+        if (!$result->price || !$result->fees || !$result->buySell) {
+            throw new BadRequestHttpException('name|value|fees arguments required');
+        }
+
+        $floorPrice = $feesManager->CalcFloorPrice($result->buySell, $result->fees, $result->price);
+        return new Response(
+            $serializer->serialize($floorPrice, "json")
+        );
     }
 }
 
