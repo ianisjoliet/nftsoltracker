@@ -45,10 +45,11 @@ class FeesManager
         foreach ($collections as $collection) {
             $collectionData = $this->meApiManager->getCollectionStat($collection->getName());
             $floorPrice = ($collectionData['floorPrice'] / 1000000000);
+            //todo:delete this, replace by floor_limit
             $limit = $collection->getValue() + (10 * $collection->getValue() / 100);
             if ($floorPrice <= $limit) {
                 $floor['name'] = $collection->getName();
-                $floor['limit'] = $collection->getValue();
+                $floor['limit'] = $limit;
                 $floor['floorPrice'] = $floorPrice;
                 $floorResult[] = $floor;
             }

@@ -55,6 +55,7 @@ class CollectionTrackerManager
         if ($collection) {
             $collection->setValue($value);
             $collection->setFloorLimit($floorLimit);
+            $collection->setFees($fees);
             $this->em->persist($collection);
             $this->em->flush();
         } else {
@@ -62,6 +63,7 @@ class CollectionTrackerManager
             $collectionTrack->setName($name);
             $collectionTrack->setValue($value);
             $collectionTrack->setFloorLimit($floorLimit);
+            $collectionTrack->setFees($fees);
 
             $this->collectionTrackRepository->add($collectionTrack);
         }

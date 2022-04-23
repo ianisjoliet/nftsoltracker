@@ -58,8 +58,8 @@ class CollectionTrackerController
     {
         $result = json_decode($request->getContent(), false);
 
-        if (!$result->name || !$result->value || !$result->limit) {
-            throw new BadRequestHttpException('name|value|fees arguments required');
+        if (!$result->name || !$result->value || !$result->fees) {
+            throw new BadRequestHttpException('name | value | fees arguments required');
         }
 
         if (!$collectionTrackerManager->addCollection($result->name, $result->value, $result->fees)) {

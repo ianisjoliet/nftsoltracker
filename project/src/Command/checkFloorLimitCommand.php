@@ -33,6 +33,7 @@ class checkFloorLimitCommand extends Command
     {
         while (42) {
             $collections = $this->feesManager->checkFloorPrice();
+            $output->writeln("/// BEGIN CHECK ///");
             foreach ($collections as $collection){
                 $output->writeln("<fg=red>--- WARNING ".date('H:i')." ---</>");
                 $output->writeln("name:".$collection["name"]);
@@ -41,7 +42,9 @@ class checkFloorLimitCommand extends Command
                 $output->writeln("<fg=red>--- END ---</>");
                 $output->writeln("");
             }
-            sleep(300);
+            $output->writeln("/// END CHECK ///");
+
+            sleep(120);
         }
         return 1;
     }
