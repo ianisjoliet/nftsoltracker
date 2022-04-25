@@ -25,19 +25,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class CollectionTrackerController
 {
     /**
-     * @Route("/collections", name="Get all collection", methods={"GET"})
-     */
-    public function getAllCollectionTracker(Request $request,
-                                            CollectionTrackerManager $collectionTrackerManager,
-                                            SerializerInterface $serializer): Response
-    {
-        $collectionList = $collectionTrackerManager->getCollection();
-        return new Response(
-            $serializer->serialize($collectionList, "json")
-        );
-    }
-
-    /**
      * @Route(name="Add collection", methods={"POST"})
      * @param Request $request
      * @param CollectionTrackRepository $collectionTrackRepository
@@ -107,6 +94,19 @@ class CollectionTrackerController
         $floorPrice = $feesManager->CalcFloorPrice($result->buySell, $result->fees, $result->price);
         return new Response(
             $serializer->serialize($floorPrice, "json")
+        );
+    }
+
+    /**
+     * @Route("/collections/all", name="Get all collection", methods={"GET"})
+     */
+    public function getAllCollectionTracker(Request $request,
+                                            CollectionTrackerManager $collectionTrackerManager,
+                                            SerializerInterface $serializer): Response
+    {
+        $collectionList = $collectionTrackerManager->getCollection();
+        return new Response(
+            $serializer->serialize($collectionList, "json")
         );
     }
 }
