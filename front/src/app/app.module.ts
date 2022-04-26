@@ -17,6 +17,8 @@ import { DialogComponent } from './dialog/dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DialogDeleteComponent } from './dialog-delete/dialog-delete.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 
 @NgModule({
@@ -24,7 +26,8 @@ import { DialogDeleteComponent } from './dialog-delete/dialog-delete.component';
     AppComponent,
     TableComponent,
     DialogComponent,
-    DialogDeleteComponent
+    DialogDeleteComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { DialogDeleteComponent } from './dialog-delete/dialog-delete.component';
     MatIconModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
