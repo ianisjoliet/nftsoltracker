@@ -1,0 +1,21 @@
+<h1 mat-dialog-title> Add collections :</h1>
+<div mat-dialog-content>
+  <form [formGroup]="collectionForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Collection Name</mat-label>
+      <input formControlName="collectionName" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input formControlName="price" type="number" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fees</mat-label>
+      <input formControlName="fees" type="number" matInput>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="warn" mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="addCollection()">Save</button>
+</div>
