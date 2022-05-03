@@ -24,7 +24,6 @@ export class DialogComponent implements OnInit {
     })
 
     if (this.editData) {
-      console.log(this.editData.value)
       this.collectionForm.controls['collectionName'].setValue(this.editData.name);
       this.collectionForm.controls['price'].setValue(this.editData.value);
       this.collectionForm.controls['fees'].setValue(this.editData.fees);
@@ -32,7 +31,6 @@ export class DialogComponent implements OnInit {
   }
 
   addCollection() {
-    console.log(this.collectionForm.value);
     if(this.collectionForm.valid) {
       this.api.postCollection(this.collectionForm.value)
         .subscribe({

@@ -37,6 +37,11 @@ class CollectionTrack
      */
     private $fees;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $currentFloor;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,5 +101,21 @@ class CollectionTrack
     public function setFees($fees): void
     {
         $this->fees = $fees;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentFloor()
+    {
+        return $this->currentFloor;
+    }
+
+    /**
+     * @param mixed $currentFloor
+     */
+    public function setCurrentFloor($currentFloor): void
+    {
+        $this->currentFloor = $currentFloor;
     }
 }

@@ -1,0 +1,23 @@
+<h1 mat-dialog-title> Calcul Buy Collection :</h1>
+<div mat-dialog-content>
+  <form [formGroup]="calculForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Price</mat-label>
+      <input formControlName="price" type="number" matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Fees</mat-label>
+      <input formControlName="fees" type="number" matInput>
+    </mat-form-field>
+    <mat-radio-group aria-label="Select an option" formControlName="buySell">
+      <mat-radio-button value="Buy">Buy</mat-radio-button>
+      <mat-radio-button value="Sell">Sell</mat-radio-button>
+    </mat-radio-group>
+  </form>
+</div>
+
+<div mat-dialog-actions [align]="'end'">
+  <button mat-raised-button color="primary" (click)="calculFloor()">Save</button>
+</div>
+
+<h1>Result: {{ result }}</h1>

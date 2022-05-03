@@ -19,6 +19,12 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DialogDeleteComponent } from './dialog-delete/dialog-delete.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTabsModule} from '@angular/material/tabs';
+import { CalculComponent } from './calcul/calcul.component';
+import { TracklistComponent } from './tracklist/tracklist.component';
+import { RouterModule } from '@angular/router';
+import {MatRadioModule} from "@angular/material/radio";
+
 
 
 @NgModule({
@@ -27,7 +33,9 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     TableComponent,
     DialogComponent,
     DialogDeleteComponent,
-    NavbarComponent
+    NavbarComponent,
+    CalculComponent,
+    TracklistComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +52,10 @@ import {MatToolbarModule} from "@angular/material/toolbar";
     MatDialogModule,
     FormsModule,
     ReactiveFormsModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTabsModule,
+    RouterModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

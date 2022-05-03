@@ -77,7 +77,7 @@ class CollectionTrackerController
     }
 
     /**
-     * @Route("/floor_limit", name="Get all collection", methods={"POST"})
+     * @Route("/floor/floor_limit", name="Get all collection", methods={"POST"})
      * @param Request $request
      * @param FeesManager $feesManager
      * @param SerializerInterface $serializer
@@ -96,6 +96,24 @@ class CollectionTrackerController
             $serializer->serialize($floorPrice, "json")
         );
     }
+
+    /**
+     * @Route("/collections/floor_limit", name="Calcul floor price with fees", methods={"POST"})
+     */
+    public function calculFloorLimit(Request $request, FeesManager $feesManager,SerializerInterface $serializer): Response
+    {
+        $result = json_decode($request->getContent(), false);
+
+        if (!$result->price || !$result->fees || !$result->buySell) {
+            throw new BadRequestHttpException('name|value|fees arguments required');
+        }
+
+        $floorPrice = $feesManager->CalcFloorPrice($result->buySell, $result->fees, $result->price);
+        return new Response(
+            $serializer->serialize($floorPrice, "json")
+        );
+    }
+
 
     /**
      * @Route("/collections/all", name="Get all collection", methods={"GET"})

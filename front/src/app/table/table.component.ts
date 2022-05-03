@@ -15,7 +15,7 @@ import {DialogDeleteComponent} from "../dialog-delete/dialog-delete.component";
 })
 export class TableComponent implements OnInit
 {
-  displayedColumns: string[] = ['id', 'name', 'price', 'floorLimit', 'fees', 'action'];
+  displayedColumns: string[] = ['id', 'name', 'price', 'floorLimit', 'fees', 'currentFloor', 'action'];
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
